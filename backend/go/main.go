@@ -12,6 +12,24 @@ var (
 	ServerAddr = os.Getenv("VC_addr")
 )
 
+const (
+	Na     = iota
+	Active = iota
+)
+
+//func
+type Device struct {
+	ID         int    `json:"id"`
+	Hardware   string `json:"hardware"`
+	Owner      string `json:"owner"`
+	Status     int    `json:"status"`
+	CreateDate int    `json:"create_date"`
+	Uptime     int    `json:"uptime"`
+	UpdateTime int    `json:"update_time"`
+	Info       string `json:"info"`
+	Token      string `json:"token"`
+}
+
 func NewServer(mux *http.ServeMux) *http.Server {
 	return &http.Server{
 		Addr:         ServerAddr,
@@ -28,7 +46,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	h := request.NewHandlers(logger)
-	h.SetupRequest(mux, "/", h.Main)
+	h.SetupRequest(mux, "/add_device", h.AddDevice)
 	h.SetupRequest(mux, "/info", h.Info)
 
 	logger.Println("Starting...")
