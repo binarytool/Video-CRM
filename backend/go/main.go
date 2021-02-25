@@ -9,7 +9,9 @@ import (
 )
 
 var (
-	ServerAddr = os.Getenv("VC_addr")
+	ServerAddr     = os.Getenv("VC_addr")
+	ServerUserName = os.Getenv("VC_uname")
+	ServerPassword = os.Getenv("VC_psw")
 )
 
 const (
@@ -18,17 +20,6 @@ const (
 )
 
 //func
-type Device struct {
-	ID         int    `json:"id"`
-	Hardware   string `json:"hardware"`
-	Owner      string `json:"owner"`
-	Status     int    `json:"status"`
-	CreateDate int    `json:"create_date"`
-	Uptime     int    `json:"uptime"`
-	UpdateTime int    `json:"update_time"`
-	Info       string `json:"info"`
-	Token      string `json:"token"`
-}
 
 func NewServer(mux *http.ServeMux) *http.Server {
 	return &http.Server{
@@ -45,9 +36,13 @@ func main() {
 	logger := log.New(os.Stdout, "vcrm > ", log.LstdFlags|log.Lshortfile)
 
 	mux := http.NewServeMux()
-	h := request.NewHandlers(logger)
-	h.SetupRequest(mux, "/add_device", h.AddDevice)
+
+	h := request.NewHandlers(logger, ServerUserName, ServerPassword)
+	h.InitDB()
+	//defer h.DB.Close()
+
 	h.SetupRequest(mux, "/info", h.Info)
+	h.SetupRequest(mux, "/device", h.Device)
 
 	logger.Println("Starting...")
 	srv := NewServer(mux)

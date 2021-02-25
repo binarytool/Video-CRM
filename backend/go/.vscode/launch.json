@@ -10,7 +10,7 @@
             "request": "launch",
             "mode": "test",
             "program": "${workspaceFolder}/main.go",
-            "env" : {"VC_addr" : ":8080"},
+            "env" : {"VC_addr" : ":8080", "VC_uname":"root", "VC_psw" : "1"},
             "showLog": false
         }, 
         {
@@ -19,7 +19,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
-            "env" : {"VC_addr" : ":8080"},
+            "env" : {"VC_addr" : ":8080", "VC_uname":"root", "VC_psw" : "1"},
             "showLog": false
         }
     ]

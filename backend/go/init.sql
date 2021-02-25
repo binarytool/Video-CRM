@@ -15,16 +15,16 @@ CREATE SCHEMA IF NOT EXISTS `video-crm` DEFAULT CHARACTER SET utf8 ;
 USE `video-crm` ;
 
 -- -----------------------------------------------------
--- Table `video-crm`.`device`
+-- Table `video-crm`.`devices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `video-crm`.`device` (
+CREATE TABLE IF NOT EXISTS `video-crm`.`devices` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `hardware` VARCHAR(512) NULL COMMENT '512 symbol string to describe hw details such as screen resolution, cpu, platform...',
   `owner` VARCHAR(256) NULL COMMENT '256 symbol string has onwer id',
   `status` INT NULL COMMENT 'status is: active or not, and so on. Just int could be a bit mask\n\n',
-  `create_date` DATETIME NULL COMMENT 'when this device was registered in system\n',
+  `create_at` DATETIME NULL COMMENT 'when this device was registered in system\n',
   `uptime` INT NULL COMMENT 'uptime in hours\n',
-  `update_time` DATETIME NULL COMMENT 'when last message were received\n',
+  `update_at` DATETIME NULL COMMENT 'when last message were received\n',
   `info` VARCHAR(128) NULL COMMENT 'serial numbers and other details\n',
   `token` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
@@ -41,9 +41,9 @@ CREATE TABLE IF NOT EXISTS `video-crm`.`timestamps` (
 
 
 -- -----------------------------------------------------
--- Table `video-crm`.`content`
+-- Table `video-crm`.`contents`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `video-crm`.`content` (
+CREATE TABLE IF NOT EXISTS `video-crm`.`contents` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `path` VARCHAR(45) NULL COMMENT 'path where file is located\n',
   `caption` VARCHAR(45) NULL,
@@ -56,31 +56,31 @@ COMMENT = 'Content description table';
 
 
 -- -----------------------------------------------------
--- Table `video-crm`.`playlist`
+-- Table `video-crm`.`playlists`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `video-crm`.`playlist` (
+CREATE TABLE IF NOT EXISTS `video-crm`.`playlists` (
   `device_id` INT NOT NULL,
   `content_id` INT NOT NULL,
   PRIMARY KEY (`device_id`, `content_id`),
   INDEX `fk_playlist_content1_idx` (`content_id` ASC),
   CONSTRAINT `fk_playlist_device`
     FOREIGN KEY (`device_id`)
-    REFERENCES `video-crm`.`device` (`id`)
+    REFERENCES `video-crm`.`devices` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_playlist_content1`
     FOREIGN KEY (`content_id`)
-    REFERENCES `video-crm`.`content` (`id`)
+    REFERENCES `video-crm`.`contents` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = 'relation between device and content which should be displayed on it.';
+COMMENT = 'relation between device and content which should be displaye' /* comment truncated */ /*d on it.*/;
 
 
 -- -----------------------------------------------------
--- Table `video-crm`.`stat`
+-- Table `video-crm`.`stats`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `video-crm`.`stat` (
+CREATE TABLE IF NOT EXISTS `video-crm`.`stats` (
   `device_id` INT NOT NULL,
   `date` DATETIME NOT NULL,
   `event` VARCHAR(45) NULL,
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `video-crm`.`stat` (
   PRIMARY KEY (`device_id`),
   CONSTRAINT `fk_stat_device1`
     FOREIGN KEY (`device_id`)
-    REFERENCES `video-crm`.`device` (`id`)
+    REFERENCES `video-crm`.`devices` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -96,9 +96,9 @@ COMMENT = 'stat table which handles device activity';
 
 
 -- -----------------------------------------------------
--- Table `video-crm`.`strategy`
+-- Table `video-crm`.`strategys`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `video-crm`.`strategy` (
+CREATE TABLE IF NOT EXISTS `video-crm`.`strategys` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `caption` VARCHAR(45) NULL,
   `content_id` INT NOT NULL,
@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `video-crm`.`strategy` (
   INDEX `fk_strategy_content1_idx` (`content_id` ASC),
   CONSTRAINT `fk_strategy_content1`
     FOREIGN KEY (`content_id`)
-    REFERENCES `video-crm`.`content` (`id`)
+    REFERENCES `video-crm`.`contents` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
