@@ -5,14 +5,13 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"video-crm/common"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type RequestHandler struct {
-	common.Handlers
+	Logger   *log.Logger
 	DB       *gorm.DB
 	Username string
 	Password string
@@ -73,9 +72,7 @@ func (h *RequestHandler) SetupRequest(mux *http.ServeMux, path string, fn func(w
 
 func NewHandlers(logger *log.Logger, uname string, psw string) *RequestHandler {
 	return &RequestHandler{
-		Handlers: common.Handlers{
-			Logger: logger,
-		},
+		Logger:   logger,
 		DB:       nil,
 		Username: uname,
 		Password: psw,
